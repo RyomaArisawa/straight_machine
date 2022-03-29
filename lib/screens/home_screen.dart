@@ -9,7 +9,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AudioPlayer _audioPlayer;
 
   final String _text01 = "おめでとうございます";
   final String _text02 = "合格です";
@@ -27,15 +26,21 @@ class _HomeScreenState extends State<HomeScreen> {
     "assets/sounds/sound6.mp3",
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    _audioPlayer = AudioPlayer();
-  }
+  final List<AudioPlayer> _audioPlayers = [
+    AudioPlayer(),
+    AudioPlayer(),
+    AudioPlayer(),
+    AudioPlayer(),
+    AudioPlayer(),
+    AudioPlayer(),
+  ];
+
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    for (var audioPlayer in _audioPlayers) {
+      audioPlayer.dispose();
+    }
     super.dispose();
   }
 
@@ -59,14 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     flex: 1,
                     child: _soundButton(
                       _text01,
-                      _soundPaths[0],
+                      0,
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: _soundButton(
                       _text02,
-                      _soundPaths[1],
+                      1,
                     ),
                   ),
                 ],
@@ -81,14 +86,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     flex: 1,
                     child: _soundButton(
                       _text03,
-                      _soundPaths[2],
+                      2,
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: _soundButton(
                       _text04,
-                      _soundPaths[3],
+                      3,
                     ),
                   ),
                 ],
@@ -103,14 +108,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     flex: 1,
                     child: _soundButton(
                       _text05,
-                      _soundPaths[4],
+                      4,
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: _soundButton(
                       _text06,
-                      _soundPaths[5],
+                      5,
                     ),
                   ),
                 ],
@@ -122,18 +127,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _soundButton(String displayText, String soundPath) {
+  Widget _soundButton(String displayText, int index) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
-        onPressed: () => _playSound(soundPath),
+        onPressed: () => _playSound(index),
         child: Text(displayText),
       ),
     );
   }
 
-  _playSound(String soundPath) async {
-    await _audioPlayer.setAsset(soundPath);
-    _audioPlayer.play();
+  _playSound(int index) async {
+    await _audioPlayers[index].setAsset(_soundPaths[index]);
+    _audioPlayers[index].play();
   }
 }
