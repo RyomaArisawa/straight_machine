@@ -9,7 +9,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final String _text01 = "おめでとうございます";
   final String _text02 = "合格です";
   final String _text03 = "よくできました";
@@ -35,6 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
     AudioPlayer(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _initSounds();
+  }
 
   @override
   void dispose() {
@@ -131,6 +135,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.brown,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.0),
+            ),
+          ),
+        ),
         onPressed: () => _playSound(index),
         child: Text(displayText),
       ),
@@ -138,7 +150,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _playSound(int index) async {
-    await _audioPlayers[index].setAsset(_soundPaths[index]);
+    await _audioPlayers[index].seek(Duration.zero);
     _audioPlayers[index].play();
+  }
+
+  void _initSounds() async {
+    for (int i = 0; i < _audioPlayers.length; i++) {
+      await _audioPlayers[i].setAsset(_soundPaths[i]);
+    }
   }
 }
